@@ -8,12 +8,12 @@
 
 Raycaster::Raycaster() {
     sf::Image wall;
-    wall.loadFromFile("/home/will/Desktop/raycastsfml/wood.png");
+    wall.loadFromFile("/home/will/raycaster/pics/wood.png");
 
     this->textures[0] = wall;
 }
 
-void Raycaster::cast(Player player, sf::RenderWindow* window) {
+void Raycaster::cast(Player player, sf::RenderWindow* window, Map map) {
     for(int x = 0; x < WINDOW_WIDTH; x++) {
         //calculate ray position and direction
         double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
@@ -89,7 +89,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         int drawStart = -lineHeight / 2 + WINDOW_HEIGHT / 2;
         if(drawStart < 0)drawStart = 0;
         int drawEnd = lineHeight / 2 + WINDOW_HEIGHT / 2;
-        if(drawEnd >= WINDOW_HEIGHT)drawEnd = WINDOW_HEIGHT - 1;
+        if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT - 1;
 
         int texNum = worldMap[mapX][mapY] - 1;
         double wallX;
@@ -107,8 +107,15 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
             int texY = (int)texPos & (TEX_HEIGHT - 1);
             texPos += step;
             //TODO: Add more textures \/ \/
-            sf::Uint32 color = textures[0].getPixel(texX, texY).toInteger();
-            //if(side == 1) color = (color >> 1) & 8355711;
+
+            sf::Color tcolor = textures[0].getPixel(texX, texY);
+            if(side == 1) {
+                tcolor.r /= 2;
+                tcolor.g /= 2;
+                tcolor.b /= 2;
+            }
+            sf::Uint32 color = tcolor.toInteger();
+
             buffer[y][x] = color;
         }
 
