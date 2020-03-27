@@ -9,15 +9,8 @@ const int MAP_WIDTH = 24;
 const int MAP_HEIGHT = 24;
 
 extern int worldMap[MAP_WIDTH][MAP_HEIGHT];
+extern sf::Image mapTextures[8];
 
-extern std::map<char, sf::Image> mapTextures;
-
-class Map {
-public:
-    std::vector<std::vector<char>> worldMap;
-    int width;
-    int height;
-    Map(std::string path);
-};
+void generateTextures();
 
 #endif // MAP_H

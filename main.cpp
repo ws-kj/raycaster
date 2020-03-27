@@ -17,7 +17,8 @@ int main() {
 
     Player player = Player(22, 12, -1, 0, 0, 0.66);
     Raycaster caster = Raycaster();
-    Map map = Map("/home/will/raycaster/maps/test.rcmap");
+
+    generateTextures();
 
     while (window.isOpen()) {
         sf::Event event;
@@ -42,7 +43,7 @@ int main() {
         window.draw(lower);
 
 
-        caster.cast(player, &window, map);
+        caster.cast(player, &window);
 
         fps = clock.getElapsedTime();
         clock.restart();

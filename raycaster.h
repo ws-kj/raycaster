@@ -12,9 +12,9 @@ class Raycaster {
 public:
     Raycaster();
 
-    void cast(Player player, sf::RenderWindow* window, Map map);
+    void cast(Player player, sf::RenderWindow* window);
 
-    sf::Image textures[8];
+
     sf::Uint32 buffer[WINDOW_WIDTH][WINDOW_HEIGHT];
 };
 

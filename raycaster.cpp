@@ -6,14 +6,9 @@
 #include "config.h"
 #include "map.h"
 
-Raycaster::Raycaster() {
-    sf::Image wall;
-    wall.loadFromFile("/home/will/raycaster/pics/wood.png");
+Raycaster::Raycaster() {}
 
-    this->textures[0] = wall;
-}
-
-void Raycaster::cast(Player player, sf::RenderWindow* window, Map map) {
+void Raycaster::cast(Player player, sf::RenderWindow* window) {
     for(int x = 0; x < WINDOW_WIDTH; x++) {
         //calculate ray position and direction
         double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
@@ -106,9 +101,8 @@ void Raycaster::cast(Player player, sf::RenderWindow* window, Map map) {
         for(int y = drawStart; y<drawEnd; y++) {
             int texY = (int)texPos & (TEX_HEIGHT - 1);
             texPos += step;
-            //TODO: Add more textures \/ \/
 
-            sf::Color tcolor = textures[0].getPixel(texX, texY);
+            sf::Color tcolor = mapTextures[texNum].getPixel(texX, texY);
             if(side == 1) {
                 tcolor.r /= 2;
                 tcolor.g /= 2;
