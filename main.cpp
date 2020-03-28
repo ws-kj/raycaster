@@ -32,17 +32,6 @@ int main() {
 
         window.clear();
 
-        sf::RectangleShape upper = sf::RectangleShape(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT / 2));
-        upper.setFillColor(sf::Color(204, 255, 255));
-        upper.setPosition(0, 0);
-        window.draw(upper);
-
-        sf::RectangleShape lower = sf::RectangleShape(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT / 2));
-        lower.setFillColor(sf::Color(168, 168, 168));
-        lower.setPosition(0, WINDOW_HEIGHT / 2);
-        window.draw(lower);
-
-
         caster.cast(player, &window);
 
         fps = clock.getElapsedTime();

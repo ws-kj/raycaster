@@ -9,8 +9,49 @@
 Raycaster::Raycaster() {}
 
 void Raycaster::cast(Player player, sf::RenderWindow* window) {
-    for(int x = 0; x < WINDOW_WIDTH; x++) {
-        //calculate ray position and direction
+    //floor/ceiling
+    for(int y = 0; y < WINDOW_HEIGHT; y++) {
+      float rayDirX0 = player.dirX - player.planeX;
+      float rayDirY0 = player.dirY - player.planeY;
+      float rayDirX1 = player.dirX + player.planeX;
+      float rayDirY1 = player.dirY + player.planeY;
+
+      int p = y - WINDOW_HEIGHT / 2;
+      float posZ = 0.5 * WINDOW_WIDTH;
+      float rowDistance = posZ / p;
+
+      float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / WINDOW_WIDTH;
+      float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / WINDOW_WIDTH;
+
+      float floorX = player.posX + rowDistance * rayDirX0;
+      float floorY = player.posY + rowDistance * rayDirY0;
+
+      for(int x = 0; x < WINDOW_WIDTH; x++) {
+           int cellX = (int)(floorX);
+           int cellY = (int)(floorY);
+
+           int tx = (int)(TEX_WIDTH * (floorX - cellX)) & (TEX_WIDTH - 1);
+           int ty = (int)(TEX_HEIGHT * (floorY - cellY)) & (TEX_HEIGHT - 1);
+
+           floorX += floorStepX;
+           floorY += floorStepY;
+
+           //floor
+           sf::Color tcolor = mapTextures[1].getPixel(tx, ty);
+           sf::Uint32 color = tcolor.toInteger();
+           buffer[y][x] = color;
+
+            //ceiling
+           tcolor = mapTextures[0].getPixel(tx, ty);
+
+           color = tcolor.toInteger();
+           buffer[WINDOW_HEIGHT - y - 1][x] = color;
+
+      }
+    }
+
+    //walls
+    for(int x = 0; x < WINDOW_WIDTH; x++) { 
         double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
         double rayPosX = player.posX;
         double rayPosY = player.posY;
@@ -113,33 +154,6 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
             buffer[y][x] = color;
         }
 
-
-
-/*
-        //choose wall color
-        sf::Color color;
-        switch(worldMap[mapX][mapY]) {
-            case 1:  color = sf::Color::Red;  break; //red
-            case 2:  color = sf::Color::Green;  break; //green
-            case 3:  color = sf::Color::Blue;   break; //blue
-            case 4:  color = sf::Color::White;  break; //white
-            default: color = sf::Color::Yellow; break; //yellow
-        }
-
-        //give x and y sides different brightness
-        if (side == 1) {
-            color = sf::Color(color.r/2, color.g/2, color.b/2);
-        }
-
-        //draw the pixels of the stripe as a vertical line
-        //verLine(x, drawStart, drawEnd, color);
-
-        sf::Vertex line[2] = {
-            sf::Vertex(sf::Vector2f(x, drawStart), color),
-            sf::Vertex(sf::Vector2f(x, drawEnd), color)
-        };
-        window->draw(line , 2, sf::Lines);
-*/
     }
 
     sf::Uint8* pixels = new sf::Uint8[WINDOW_WIDTH*WINDOW_HEIGHT*4];
