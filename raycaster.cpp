@@ -171,7 +171,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         double spriteX = sprites[spriteOrder[i]].posX - player.posX;
         double spriteY = sprites[spriteOrder[i]].posY - player.posY;
 
-        double invDet = 1.0 / (player.planeX * player.dirY - player.dirY * player.planeY);
+        double invDet = 1.0 / (player.planeX * player.dirY - player.dirX * player.planeY);
 
         double transformX = invDet * (player.dirY * spriteX - player.dirX * spriteY);
         double transformY = invDet * (-player.planeY * spriteX + player.planeX * spriteY);
