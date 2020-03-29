@@ -30,6 +30,7 @@ int worldMap[MAP_WIDTH][MAP_HEIGHT]
 };
 
 sf::Image mapTextures[8];
+std::vector<Sprite> sprites;
 
 void generateTextures() {
     sf::Image wood;
@@ -50,5 +51,8 @@ void generateTextures() {
     sf::Image pillar;
     eagle.loadFromFile("/home/will/raycaster/pics/pillar.png");
     mapTextures[5] = pillar;
+    sf::Image barrel;
+    barrel.loadFromFile("/home/will/raycaster/pics/barrel.png");
+    mapTextures[6] = barrel;
 }
 

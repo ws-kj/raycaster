@@ -2,11 +2,13 @@
 #include <SFML/Window.hpp>
 #include <stdlib.h>
 #include <math.h>
+#include <vector>
 
 #include "map.h"
 #include "config.h"
 #include "player.h"
 #include "raycaster.h"
+#include "sprite.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Raycaster");
@@ -17,6 +19,9 @@ int main() {
 
     Player player = Player(22, 12, -1, 0, 0, 0.66);
     Raycaster caster = Raycaster();
+
+    Sprite barrel = Sprite(22.0f, 21.0f, 6);
+    sprites.push_back(barrel);
 
     generateTextures();
 
