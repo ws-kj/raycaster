@@ -201,7 +201,10 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
 
                 sf::Color tcolor = mapTextures[sprites[spriteOrder[i]].texture].getPixel(texX, texY);
                 sf::Uint32 color = tcolor.toInteger();
-                buffer[y][stripe] = color;
+
+                if(tcolor.a != 0) {
+                    buffer[y][stripe] = color;
+                }
             }
         }
     }
