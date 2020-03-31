@@ -51,7 +51,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
     }
 
     //walls
-    for(int x = 0; x < WINDOW_WIDTH; x++) { 
+    for(int x = 0; x < WINDOW_WIDTH; x++) {
         double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
         double rayPosX = player.posX;
         double rayPosY = player.posY;
@@ -155,6 +155,10 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         }
         zBuffer[x] = perpWallDist;
     }
+
+    spriteOrder.clear();
+    spriteDistance.clear();
+
     //draw sprites
     for(int i = 0; i < sprites.size(); i++) {
         spriteOrder.push_back(i);
@@ -163,7 +167,6 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
             * (player.posX - sprites[i].posX)
             + (player.posY - sprites[i].posY)
             * (player.posY - sprites[i].posY));
-
     }
     this->sortSprites();
 
@@ -183,27 +186,28 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         int drawStartY = -spriteHeight / 2 + WINDOW_HEIGHT / 2;
         if(drawStartY < 0) drawStartY = 0;
         int drawEndY = spriteHeight / 2 + WINDOW_HEIGHT / 2;
-        if(drawEndY >= WINDOW_HEIGHT) drawEndY = WINDOW_HEIGHT - 1;
+        if(drawEndY >= WINDOW_HEIGHT) drawEndY = WINDOW_HEIGHT;
 
         int spriteWidth = abs(int(WINDOW_HEIGHT / (transformY)));
         int drawStartX = -spriteWidth / 2 + spriteScreenX;
         if(drawStartX < 0) drawStartX = 0;
         int drawEndX = spriteWidth / 2 + spriteScreenX;
-        if(drawEndX >= WINDOW_WIDTH) drawEndX = WINDOW_WIDTH - 1;
+        if(drawEndX >= WINDOW_WIDTH) drawEndX = WINDOW_WIDTH;
 
         for(int stripe = drawStartX; stripe < drawEndX; stripe++) {
             int texX = int(256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * TEX_WIDTH / spriteWidth) / 256;
 
-            if(transformY > 0 && stripe > 0 && stripe < WINDOW_WIDTH && transformY < zBuffer[stripe])
-            for(int y = drawStartY; y < drawEndY; y++) {
-                int d  = (y) * 256 - WINDOW_HEIGHT * 128 + spriteHeight * 128;
-                int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
+            if(transformY > 0 && stripe > 0 && stripe < WINDOW_WIDTH && transformY < zBuffer[stripe]) {
+                for(int y = drawStartY; y < drawEndY; y++) {
+                    int d  = (y) * 256 - WINDOW_HEIGHT * 128 + spriteHeight * 128;
+                    int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
 
-                sf::Color tcolor = mapTextures[sprites[spriteOrder[i]].texture].getPixel(texX, texY);
-                sf::Uint32 color = tcolor.toInteger();
+                    sf::Color tcolor = mapTextures[sprites[spriteOrder[i]].texture].getPixel(texX, texY);
+                    sf::Uint32 color = tcolor.toInteger();
 
-                if(tcolor.a != 0) {
-                    buffer[y][stripe] = color;
+                    if(tcolor.a != 0) {
+                        buffer[y][stripe] = color;
+                    }
                 }
             }
         }
@@ -244,9 +248,12 @@ void Raycaster::sortSprites() {
         spr[i].second = spriteOrder[i];
       }
       std::sort(spr.begin(), spr.end());
+
       // restore in reverse order to go from farthest to nearest
       for(int i = 0; i < sprites.size(); i++) {
         spriteDistance[i] = spr[sprites.size() - i - 1].first;
         spriteOrder[i] = spr[sprites.size() - i - 1].second;
       }
+
+
 }
