@@ -20,13 +20,7 @@ int main() {
     Player player = Player(22, 12, -1, 0, 0, 0.66);
     Raycaster caster = Raycaster();
 
-    Sprite barrel = Sprite(22.0f, 21.0f, 6);
-    sprites.push_back(barrel);
-    Sprite barrel2 = Sprite(22.0f, 22.0f, 6);
-    sprites.push_back(barrel2);
-    Sprite barrel3 = Sprite(21.0f, 22.0f, 6);
-    sprites.push_back(barrel3);
-    generateTextures();
+    generateTiles();
 
     while (window.isOpen()) {
         sf::Event event;

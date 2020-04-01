@@ -1,58 +1,95 @@
 #include "map.h"
-#include <fstream>
+#include "config.h"
 
-int worldMap[MAP_WIDTH][MAP_HEIGHT]
+std::vector<std::vector<int>> worldMap
 {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-        {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-        {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+        {'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ','g','g','g','g','g',' ',' ',' ',' ','r',' ','r',' ','r',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ','g','P','P','P','g',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ','g',' ',' ',' ','g',' ',' ',' ',' ','r',' ',' ',' ','r',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ','g',' ','L',' ','g',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ','g','g',' ','g','g',' ',' ',' ',' ','r',' ','r',' ','r',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','B',' ',' ',' ','B',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','B',' ',' ',' ',' ',' ','w'},
+        {'w',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','m','m','m','m','m','m','m','m',' ',' ',' ',' ',' ',' ','B',' ',' ',' ','B',' ',' ',' ','w'},
+        {'w','m',' ','m',' ',' ',' ',' ','m',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','m',' ',' ',' ',' ','e',' ','m',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','m',' ','m',' ',' ',' ',' ','m',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','m',' ','m','m','m','m','m','m',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','m',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','m','m','m','m','m','m','m','m',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','w'},
+        {'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'}
 };
 
-sf::Image mapTextures[8];
+std::vector<TileReference> tileReferences;
 std::vector<Sprite> sprites;
+void generateTiles() {
+    TileReference empty;
+    empty.name = " ";
+    empty.symbol = ' ';
+    empty.collidable = false;
+    tileReferences.push_back(empty);
 
-void generateTextures() {
-    sf::Image wood;
-    wood.loadFromFile("/home/will/raycaster/pics/wood.png");
-    mapTextures[0] = wood;
-    sf::Image greystone;
-    greystone.loadFromFile("/home/will/raycaster/pics/greystone.png");
-    mapTextures[1] = greystone;
-    sf::Image redbrick;
-    redbrick.loadFromFile("/home/will/raycaster/pics/redbrick.png");
-    mapTextures[2] = redbrick;
-    sf::Image bluestone;
-    bluestone.loadFromFile("/home/will/raycaster/pics/bluestone.png");
-    mapTextures[3] = bluestone;
-    sf::Image eagle;
-    eagle.loadFromFile("/home/will/raycaster/pics/eagle.png");
-    mapTextures[4] = eagle;
-    sf::Image pillar;
-    eagle.loadFromFile("/home/will/raycaster/pics/pillar.png");
-    mapTextures[5] = pillar;
-    sf::Image barrel;
-    barrel.loadFromFile("/home/will/raycaster/pics/barrel.png");
-    mapTextures[6] = barrel;
+    createTile("wood", 'w');
+    createTile("mossy", 'm');
+    createTile("eagle", 'e');
+    createTile("greystone", 'g');
+    createTile("redbrick", 'r');
+
+    createTile("barrel", 'B', true, true);
+    createTile("pillar", 'P', true, true);
+    createTile("greenlight", 'L', false, true);
+}
+
+int loadMap(std::vector<std::vector<int>> map) {
+    for(int i = 0; i < map.size(); i++) {
+        for(int j = 0; j < map[i].size(); i++) {
+            TileReference* ref;
+            if(getReference(map[i][j]) != NULL) {
+                ref = getReference(map[i][j]);
+            } else {
+                ref = getReference(' ');
+            }
+
+            if(ref->sprite) {
+                Sprite sprite = Sprite((float)i, (float)j, ref);
+                sprites.push_back(sprite);
+            }
+
+        }
+    }
+
+    return 0;
+}
+
+void createTile(std::string name, int symbol, bool collidable, bool sprite) {
+    TileReference ref;
+    ref.name = name;
+    ref.symbol = symbol;
+    ref.collidable = collidable;
+    ref.sprite = sprite;
+
+    sf::Image image;
+    image.loadFromFile("/home/will/raycaster/pics/" + name + ".png");
+    ref.texture = image;
+
+    tileReferences.push_back(ref);
+}
+
+TileReference* getReference(int symbol) {
+    for(int i = 0; i < tileReferences.size(); i++) {
+        if(tileReferences[i].symbol == symbol) {
+            return &tileReferences[i];
+        }
+    }
+    return NULL;
 }
 

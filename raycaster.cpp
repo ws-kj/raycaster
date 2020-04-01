@@ -254,6 +254,4 @@ void Raycaster::sortSprites() {
         spriteDistance[i] = spr[sprites.size() - i - 1].first;
         spriteOrder[i] = spr[sprites.size() - i - 1].second;
       }
-
-
 }

@@ -1,7 +1,8 @@
 #include "sprite.h"
+#include "map.h"
 
-Sprite::Sprite(float x, float y, int tex) {
+Sprite::Sprite(float x, float y, TileReference* ref) {
     this->posX = x;
     this->posY = y;
-    this->texture = tex;
+    this->reference = ref;
 }
