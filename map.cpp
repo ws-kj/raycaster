@@ -1,5 +1,6 @@
 #include "map.h"
 #include "config.h"
+#include "sprite.h"
 
 std::vector<std::vector<int>> worldMap
 {
@@ -30,7 +31,7 @@ std::vector<std::vector<int>> worldMap
 };
 
 std::vector<TileReference> tileReferences;
-std::vector<Sprite> sprites;
+
 void generateTiles() {
     TileReference empty;
     empty.name = " ";
@@ -53,10 +54,10 @@ int loadMap(std::vector<std::vector<int>> map) {
     for(int i = 0; i < map.size(); i++) {
         for(int j = 0; j < map[i].size(); i++) {
             TileReference* ref;
-            if(getReference(map[i][j]) != NULL) {
-                ref = getReference(map[i][j]);
+            if(getTileReference(map[i][j]) != NULL) {
+                ref = getTileReference(map[i][j]);
             } else {
-                ref = getReference(' ');
+                ref = getTileReference(' ');
             }
 
             if(ref->sprite) {
@@ -84,7 +85,7 @@ void createTile(std::string name, int symbol, bool collidable, bool sprite) {
     tileReferences.push_back(ref);
 }
 
-TileReference* getReference(int symbol) {
+TileReference* getTileReference(int symbol) {
     for(int i = 0; i < tileReferences.size(); i++) {
         if(tileReferences[i].symbol == symbol) {
             return &tileReferences[i];

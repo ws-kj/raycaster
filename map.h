@@ -5,8 +5,6 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 
-#include "sprite.h"
-
 const int MAP_WIDTH = 24;
 const int MAP_HEIGHT = 24;
 
@@ -30,17 +28,11 @@ struct TileReference {
     bool sprite;
 };
 
-struct Tile {
-    double x, y;
-    TileReference* reference;
-};
-
 extern std::vector<std::vector<int>> worldMap;
 extern std::vector<TileReference> tileReferences;
-extern std::vector<Sprite> sprites;
 
 void generateTiles();
 void createTile(std::string name, int symbol, bool collidable=true, bool sprite=false);
-TileReference* getReference(int symbol);
+TileReference* getTileReference(int symbol);
 
 #endif // MAP_H

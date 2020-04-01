@@ -12,4 +12,6 @@ public:
     TileReference* reference;
 };
 
+extern std::vector<Sprite> sprites;
+
 #endif // SPRITE_H

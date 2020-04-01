@@ -5,6 +5,7 @@
 #include "player.h"
 #include "config.h"
 #include "map.h"
+#include "sprite.h"
 
 Raycaster::Raycaster() {}
 
@@ -37,12 +38,12 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
            floorY += floorStepY;
 
            //floor
-           sf::Color tcolor = mapTextures[1].getPixel(tx, ty);
+           sf::Color tcolor = getTileReference('g')->texture.getPixel(tx, ty);
            sf::Uint32 color = tcolor.toInteger();
            buffer[y][x] = color;
 
             //ceiling
-           tcolor = mapTextures[0].getPixel(tx, ty);
+           tcolor = getTileReference('w')->texture.getPixel(tx, ty);
 
            color = tcolor.toInteger();
            buffer[WINDOW_HEIGHT - y - 1][x] = color;
@@ -110,7 +111,9 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
                 side = 1;
             }
             //Check if ray has hit a wall
-            if (worldMap[mapX][mapY] > 0) hit = 1;
+            if (!getTileReference(worldMap[mapX][mapY])->sprite && worldMap[mapX][mapY] != ' ')  {
+                hit = 1;
+            }
         }
 
         if (side == 0)
@@ -127,7 +130,8 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         int drawEnd = lineHeight / 2 + WINDOW_HEIGHT / 2;
         if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT - 1;
 
-        int texNum = worldMap[mapX][mapY] - 1;
+        int texNum = worldMap[mapX][mapY];
+        TileReference* ref = getTileReference(texNum);
         double wallX;
         if (side == 0) wallX = player.posY + perpWallDist * rayDirY;
         else           wallX = player.posX + perpWallDist * rayDirX;
@@ -142,8 +146,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         for(int y = drawStart; y<drawEnd; y++) {
             int texY = (int)texPos & (TEX_HEIGHT - 1);
             texPos += step;
-
-            sf::Color tcolor = mapTextures[texNum].getPixel(texX, texY);
+            sf::Color tcolor = ref->texture.getPixel(texX, texY);
             if(side == 1) {
                 tcolor.r /= 2;
                 tcolor.g /= 2;
@@ -202,7 +205,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
                     int d  = (y) * 256 - WINDOW_HEIGHT * 128 + spriteHeight * 128;
                     int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
 
-                    sf::Color tcolor = mapTextures[sprites[spriteOrder[i]].texture].getPixel(texX, texY);
+                    sf::Color tcolor = sprites[spriteOrder[i]].reference->texture.getPixel(texX, texY);
                     sf::Uint32 color = tcolor.toInteger();
 
                     if(tcolor.a != 0) {
