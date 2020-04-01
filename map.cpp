@@ -64,7 +64,6 @@ void loadMap(std::vector<std::vector<int>> map) {
                 ref = getTileReference(' ');
             }
             if(ref->sprite == true) {
-                printf("%d %d\n", i, j);
                 Sprite sprite = Sprite(i + 0.5, j + 0.5, ref);
                 sprites.push_back(sprite);
             }

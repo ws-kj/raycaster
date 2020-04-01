@@ -12,7 +12,7 @@
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Raycaster");
-
+    window.setSize(sf::Vector2u(TRUE_WINDOW_WIDTH, TRUE_WINDOW_HEIGHT));
     window.setFramerateLimit(60);
     sf::Clock clock = sf::Clock();
     sf::Time fps;

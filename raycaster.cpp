@@ -128,7 +128,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         int drawStart = -lineHeight / 2 + WINDOW_HEIGHT / 2;
         if(drawStart < 0)drawStart = 0;
         int drawEnd = lineHeight / 2 + WINDOW_HEIGHT / 2;
-        if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT - 1;
+        if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT;
 
         int texNum = worldMap[mapX][mapY];
         TileReference* ref = getTileReference(texNum);
