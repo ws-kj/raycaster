@@ -50,25 +50,28 @@ void generateTiles() {
     createTile("greenlight", 'L', false, true);
 }
 
-int loadMap(std::vector<std::vector<int>> map) {
-    for(int i = 0; i < map.size(); i++) {
-        for(int j = 0; j < map[i].size(); i++) {
-            TileReference* ref;
-            if(getTileReference(map[i][j]) != NULL) {
-                ref = getTileReference(map[i][j]);
+void loadMap(std::vector<std::vector<int>> map) {
+    int i = 0;
+    int j = 0;
+    for(auto & vec : map) {
+        j = 0;
+        for(auto & t : vec) {
+             TileReference* ref;
+
+            if(getTileReference(t) != NULL) {
+                ref = getTileReference(t);
             } else {
                 ref = getTileReference(' ');
             }
-
-            if(ref->sprite) {
-                Sprite sprite = Sprite((float)i, (float)j, ref);
+            if(ref->sprite == true) {
+                printf("%d %d\n", i, j);
+                Sprite sprite = Sprite(i, j, ref);
                 sprites.push_back(sprite);
             }
-
+            j += 1;
         }
+        i += 1;
     }
-
-    return 0;
 }
 
 void createTile(std::string name, int symbol, bool collidable, bool sprite) {

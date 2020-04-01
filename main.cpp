@@ -21,6 +21,7 @@ int main() {
     Raycaster caster = Raycaster();
 
     generateTiles();
+    loadMap(worldMap);
 
     while (window.isOpen()) {
         sf::Event event;

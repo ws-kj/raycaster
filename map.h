@@ -31,6 +31,7 @@ struct TileReference {
 extern std::vector<std::vector<int>> worldMap;
 extern std::vector<TileReference> tileReferences;
 
+void loadMap(std::vector<std::vector<int>> map);
 void generateTiles();
 void createTile(std::string name, int symbol, bool collidable=true, bool sprite=false);
 TileReference* getTileReference(int symbol);
