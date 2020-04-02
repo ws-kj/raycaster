@@ -52,121 +52,116 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
     }
 
     std::vector<std::vector<int>> map;
-    int level;
+    for(int level = maps.size() - 1; level >= 0; level--) {
+        map = maps[level];
 
-    for(int x = 0; x < WINDOW_WIDTH; x++) {
-        double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
-        double rayPosX = player.posX;
-        double rayPosY = player.posY;
-        double rayDirX = player.dirX + player.planeX * cameraX;
-        double rayDirY = player.dirY + player.planeY * cameraX;
+        for(int x = 0; x < WINDOW_WIDTH; x++) {
+            double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
+            double rayPosX = player.posX;
+            double rayPosY = player.posY;
+            double rayDirX = player.dirX + player.planeX * cameraX;
+            double rayDirY = player.dirY + player.planeY * cameraX;
 
-        //which box of the map we're in
-        int mapX = int(rayPosX);
-        int mapY = int(rayPosY);
+            //which box of the map we're in
+            int mapX = int(rayPosX);
+            int mapY = int(rayPosY);
 
-        //length of ray from current position to next x or y-side
-        double sideDistX;
-        double sideDistY;
+            //length of ray from current position to next x or y-side
+            double sideDistX;
+            double sideDistY;
 
-        //length of ray from one x or y-side to next x or y-side
-        double deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
-        double deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
-        double perpWallDist;
+            //length of ray from one x or y-side to next x or y-side
+            double deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
+            double deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
+            double perpWallDist;
 
-        //what direction to step in x or y-direction (either +1 or -1)
-        int stepX;
-        int stepY;
+            //what direction to step in x or y-direction (either +1 or -1)
+            int stepX;
+            int stepY;
 
-        int hit = 0; //was there a wall hit?
-        int side; //was a NS or a EW wall hit?
+            int hit = 0; //was there a wall hit?
+            int side; //was a NS or a EW wall hit?
 
-        //calculate step and initial sideDist
-        if (rayDirX < 0) {
-            stepX = -1;
-            sideDistX = (rayPosX - mapX) * deltaDistX;
-        }
-        else {
-            stepX = 1;
-            sideDistX = (mapX + 1.0 - rayPosX) * deltaDistX;
-        }
-        if (rayDirY < 0) {
-            stepY = -1;
-            sideDistY = (rayPosY - mapY) * deltaDistY;
-        }
-        else {
-            stepY = 1;
-            sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
-        }
-
-        //perform DDA
-        while (hit == 0) {
-            //jump to next map square, OR in x-direction, OR in y-direction
-            if (sideDistX < sideDistY) {
-                sideDistX += deltaDistX;
-                mapX += stepX;
-                side = 0;
+            //calculate step and initial sideDist
+            if (rayDirX < 0) {
+                stepX = -1;
+                sideDistX = (rayPosX - mapX) * deltaDistX;
             }
             else {
-                sideDistY += deltaDistY;
-                mapY += stepY;
-                side = 1;
+                stepX = 1;
+                sideDistX = (mapX + 1.0 - rayPosX) * deltaDistX;
             }
-            //Check if ray has hit a wall
-            int k = 0;
-            for(std::vector<std::vector<int>> &m : maps) {
-                if (!getTileReference(m[mapX][mapY])->sprite && m[mapX][mapY] != ' ')  {
-                    hit = 1;
-                    map = m;
-                    level = k;
+            if (rayDirY < 0) {
+                stepY = -1;
+                sideDistY = (rayPosY - mapY) * deltaDistY;
+            }
+            else {
+                stepY = 1;
+                sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
+            }
+
+            //perform DDA
+            while (hit == 0) {
+                //jump to next map square, OR in x-direction, OR in y-direction
+                if (sideDistX < sideDistY) {
+                    sideDistX += deltaDistX;
+                    mapX += stepX;
+                    side = 0;
                 }
-                k += 1;
+                else {
+                    sideDistY += deltaDistY;
+                    mapY += stepY;
+                    side = 1;
+                }
+                //Check if ray has hit a wall
+                if (!getTileReference(map[mapX][mapY])->sprite && map[mapX][mapY] != ' ')  {
+                    hit = 1;
+                }
             }
-        }
 
-        if (side == 0)
-            perpWallDist = fabs((mapX - rayPosX + (1 - stepX) / 2) / rayDirX);
-        else
-            perpWallDist = fabs((mapY - rayPosY + (1 - stepY) / 2) / rayDirY);
+            if (side == 0)
+                perpWallDist = fabs((mapX - rayPosX + (1 - stepX) / 2) / rayDirX);
+            else
+                perpWallDist = fabs((mapY - rayPosY + (1 - stepY) / 2) / rayDirY);
 
-        //Calculate height of line to draw on screen
-        int lineHeight = abs(int(WINDOW_HEIGHT / perpWallDist));
+            //Calculate height of line to draw on screen
+            int lineHeight = abs(int(WINDOW_HEIGHT / perpWallDist));
 
-        //calculate lowest and highest pixel to fill in current stripe
-        int drawStart = ((WINDOW_HEIGHT / 2) - lineHeight / 2) - (lineHeight * level);
-        if(drawStart < 0) drawStart = 0;
-        int drawEnd = ((WINDOW_HEIGHT / 2) + lineHeight / 2) - (lineHeight * level);
-        if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT;
+            //calculate lowest and highest pixel to fill in current stripe
+            int drawStart = ((WINDOW_HEIGHT / 2) - lineHeight / 2) - (lineHeight * level);
+            if(drawStart < 0) drawStart = 0;
+            int drawEnd = ((WINDOW_HEIGHT / 2) + lineHeight / 2) - (lineHeight * level);
+            if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT;
 
-        int texNum = map[mapX][mapY];
-        TileReference* ref = getTileReference(texNum);
-        double wallX;
-        if (side == 0) wallX = player.posY + perpWallDist * rayDirY;
-        else           wallX = player.posX + perpWallDist * rayDirX;
-        wallX -= floor((wallX));
+            int texNum = map[mapX][mapY];
+            TileReference* ref = getTileReference(texNum);
+            double wallX;
+            if (side == 0) wallX = player.posY + perpWallDist * rayDirY;
+            else           wallX = player.posX + perpWallDist * rayDirX;
+            wallX -= floor((wallX));
 
-        int texX = int(wallX * double(TEX_WIDTH));
-        if(side == 0 && rayDirX > 0) texX = TEX_WIDTH - texX - 1;
-        if(side == 1 && rayDirY < 0) texX = TEX_WIDTH - texX - 1;
+            int texX = int(wallX * double(TEX_WIDTH));
+            if(side == 0 && rayDirX > 0) texX = TEX_WIDTH - texX - 1;
+            if(side == 1 && rayDirY < 0) texX = TEX_WIDTH - texX - 1;
 
-        double step = 1.0 * TEX_HEIGHT / lineHeight;
-        double texPos = (drawStart - WINDOW_HEIGHT / 2 + lineHeight / 2) * step;
-        for(int y = drawStart; y<drawEnd; y++) {
-            int texY = (int)texPos & (TEX_HEIGHT - 1);
-            texPos += step;
-            sf::Color tcolor = ref->texture.getPixel(texX, texY);
-            if(side == 1) {
-                tcolor.r /= 2;
-                tcolor.g /= 2;
-                tcolor.b /= 2;
+            double step = 1.0 * TEX_HEIGHT / lineHeight;
+            double texPos = (drawStart - WINDOW_HEIGHT / 2 + lineHeight / 2) * step;
+            for(int y = drawStart; y<drawEnd; y++) {
+                int texY = (int)texPos & (TEX_HEIGHT - 1);
+                texPos += step;
+                sf::Color tcolor = ref->texture.getPixel(texX, texY);
+                if(side == 1) {
+                    tcolor.r /= 2;
+                    tcolor.g /= 2;
+                    tcolor.b /= 2;
+                }
+                sf::Uint32 color = tcolor.toInteger();
+
+                buffer[y][x] = color;
             }
-            sf::Uint32 color = tcolor.toInteger();
-
-            buffer[y][x] = color;
+            zBuffer[x] = perpWallDist;
         }
-        zBuffer[x] = perpWallDist;
     }
-
 
     spriteOrder.clear();
     spriteDistance.clear();
