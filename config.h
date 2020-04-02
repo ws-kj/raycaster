@@ -8,4 +8,6 @@ const int TRUE_WINDOW_HEIGHT = 480;
 const int TEX_WIDTH = 64;
 const int TEX_HEIGHT = 64;
 
+
+
 #endif // CONFIG_H

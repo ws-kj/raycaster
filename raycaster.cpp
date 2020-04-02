@@ -40,18 +40,20 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
            //floor
            sf::Color tcolor = getTileReference('g')->texture.getPixel(tx, ty);
            sf::Uint32 color = tcolor.toInteger();
-           buffer[y][x] = color;
+           //buffer[y][x] = color;
 
             //ceiling
            tcolor = getTileReference('w')->texture.getPixel(tx, ty);
 
            color = tcolor.toInteger();
-           buffer[WINDOW_HEIGHT - y - 1][x] = color;
+           //buffer[WINDOW_HEIGHT - y - 1][x] = color;
 
       }
     }
 
-    //walls
+    std::vector<std::vector<int>> map;
+    int level;
+
     for(int x = 0; x < WINDOW_WIDTH; x++) {
         double cameraX = 2 * x / double(WINDOW_WIDTH) - 1; //x-coordinate in camera space
         double rayPosX = player.posX;
@@ -111,8 +113,14 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
                 side = 1;
             }
             //Check if ray has hit a wall
-            if (!getTileReference(worldMap[mapX][mapY])->sprite && worldMap[mapX][mapY] != ' ')  {
-                hit = 1;
+            int k = 0;
+            for(std::vector<std::vector<int>> &m : maps) {
+                if (!getTileReference(m[mapX][mapY])->sprite && m[mapX][mapY] != ' ')  {
+                    hit = 1;
+                    map = m;
+                    level = k;
+                }
+                k += 1;
             }
         }
 
@@ -125,12 +133,12 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         int lineHeight = abs(int(WINDOW_HEIGHT / perpWallDist));
 
         //calculate lowest and highest pixel to fill in current stripe
-        int drawStart = -lineHeight / 2 + WINDOW_HEIGHT / 2;
-        if(drawStart < 0)drawStart = 0;
-        int drawEnd = lineHeight / 2 + WINDOW_HEIGHT / 2;
+        int drawStart = ((WINDOW_HEIGHT / 2) - lineHeight / 2) - (lineHeight * level);
+        if(drawStart < 0) drawStart = 0;
+        int drawEnd = ((WINDOW_HEIGHT / 2) + lineHeight / 2) - (lineHeight * level);
         if(drawEnd >= WINDOW_HEIGHT) drawEnd = WINDOW_HEIGHT;
 
-        int texNum = worldMap[mapX][mapY];
+        int texNum = map[mapX][mapY];
         TileReference* ref = getTileReference(texNum);
         double wallX;
         if (side == 0) wallX = player.posY + perpWallDist * rayDirY;
@@ -158,6 +166,7 @@ void Raycaster::cast(Player player, sf::RenderWindow* window) {
         }
         zBuffer[x] = perpWallDist;
     }
+
 
     spriteOrder.clear();
     spriteDistance.clear();

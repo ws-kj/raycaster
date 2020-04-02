@@ -39,19 +39,19 @@ void Player::calculateMovement(sf::Time fps) {
         this->planeY = oldPlaneX * sin(-rotSpeed) + this->planeY * cos(-rotSpeed);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        if(!getTileReference(worldMap[int(this->posX + this->dirX * moveSpeed)][int(this->posY)])->collidable) this->posX += this->dirX * moveSpeed;
-        if(!getTileReference(worldMap[int(this->posX)][int(this->posY + this->dirY * moveSpeed)])->collidable) this->posY += this->dirY * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX + this->dirX * moveSpeed)][int(this->posY)])->collidable) this->posX += this->dirX * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX)][int(this->posY + this->dirY * moveSpeed)])->collidable) this->posY += this->dirY * moveSpeed;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        if(!getTileReference(worldMap[int(this->posX - this->dirX * moveSpeed)][int(this->posY)])->collidable) this->posX -= this->dirX * moveSpeed;
-        if(!getTileReference(worldMap[int(this->posX)][int(this->posY - this->dirY * moveSpeed)])->collidable) this->posY -= this->dirY * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX - this->dirX * moveSpeed)][int(this->posY)])->collidable) this->posX -= this->dirX * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX)][int(this->posY - this->dirY * moveSpeed)])->collidable) this->posY -= this->dirY * moveSpeed;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        if(!getTileReference(worldMap[int(this->posX + this->planeX * moveSpeed)][int(this->posY)])->collidable) this->posX += this->planeX * moveSpeed;
-        if(!getTileReference(worldMap[int(this->posX)][int(this->posY + this->planeY * moveSpeed)])->collidable) this->posY += this->planeY * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX + this->planeX * moveSpeed)][int(this->posY)])->collidable) this->posX += this->planeX * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX)][int(this->posY + this->planeY * moveSpeed)])->collidable) this->posY += this->planeY * moveSpeed;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        if(!getTileReference(worldMap[int(this->posX - this->planeX * moveSpeed)][int(this->posY)])->collidable) this->posX -= this->planeX * moveSpeed;
-        if(!getTileReference(worldMap[int(this->posX)][int(this->posY - this->planeY * moveSpeed)])->collidable) this->posY -= this->planeY * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX - this->planeX * moveSpeed)][int(this->posY)])->collidable) this->posX -= this->planeX * moveSpeed;
+        if(!getTileReference(lowerMap[int(this->posX)][int(this->posY - this->planeY * moveSpeed)])->collidable) this->posY -= this->planeY * moveSpeed;
     }
 }
